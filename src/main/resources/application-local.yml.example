@@ -1,0 +1,21 @@
+# 复制本文件为 application-local.yml 后按需修改（可选）
+# 推荐：在网页开厅时配置第三方 Key，不必改此文件
+
+spring:
+  ai:
+    openai:
+      api-key: sk-placeholder
+      # 必须是合法 URL，例如 https://api.xxx.com  不要写中文占位
+      base-url: https://api.openai.com
+      chat:
+        options:
+          model: gpt-4o-mini
+          temperature: 0.4
+
+app:
+  vision:
+    api-key: sk-placeholder
+    base-url: https://api.openai.com
+    model: gpt-4o
+    enabled: true
+    fallback-when-unavailable: true

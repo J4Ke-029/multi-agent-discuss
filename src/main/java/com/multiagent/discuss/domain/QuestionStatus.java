@@ -1,0 +1,16 @@
+package com.multiagent.discuss.domain;
+
+public enum QuestionStatus {
+    THINKING,
+    ALL_THOUGHTS_READY,
+    DISCUSSING,
+    WAITING_FOR_INTERJECTION,
+    PROFESSIONAL_CONSENSUS_READY,
+    STYLE_FINAL_PASS,
+    REVISION_PLAN_READY,
+    AWAITING_CONFIRM,
+    REVISING,
+    REVISED_COMPLETED,
+    COMPLETED,
+    FAILED
+}

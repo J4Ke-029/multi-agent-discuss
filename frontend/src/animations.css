@@ -1,0 +1,240 @@
+/* 全局动画和过渡效果 */
+
+/* 页面过渡动画 */
+.app-shell {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 面板动画 */
+.panel-side {
+  animation: slideInLeft 0.4s ease-out;
+}
+
+.panel-right {
+  animation: slideInRight 0.4s ease-out;
+}
+
+.panel-center {
+  animation: slideInUp 0.5s ease-out;
+}
+
+/* 卡片悬浮效果 */
+.card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card:hover {
+  border-color: var(--border-strong);
+}
+
+/* 按钮波纹效果 */
+.btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.btn:active::after {
+  width: 300px;
+  height: 300px;
+}
+
+/* 智能体卡片动画 */
+.agent-card {
+  transition: all 0.3s ease;
+}
+
+.agent-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(212, 168, 75, 0.08), transparent);
+  transition: left 0.5s;
+}
+
+.agent-card:hover::before {
+  left: 100%;
+}
+
+/* 思考席动画 */
+.seat {
+  transition: all 0.3s ease;
+}
+
+.seat[data-state='RUNNING'] {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(212, 168, 75, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(212, 168, 75, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(212, 168, 75, 0);
+  }
+}
+
+/* 时间线动画 */
+.timeline {
+  position: relative;
+}
+
+.turn {
+  animation: slideInUp 0.5s ease-out;
+  animation-fill-mode: both;
+}
+
+.turn:nth-child(1) { animation-delay: 0.1s; }
+.turn:nth-child(2) { animation-delay: 0.2s; }
+.turn:nth-child(3) { animation-delay: 0.3s; }
+.turn:nth-child(4) { animation-delay: 0.4s; }
+.turn:nth-child(5) { animation-delay: 0.5s; }
+
+/* 输入框聚焦动画 */
+.input, .textarea, .select {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.input:focus, .textarea:focus, .select:focus {
+  transform: translateY(-1px);
+}
+
+/* Toast 动画 */
+.toast {
+  animation: slideInUp 0.3s ease-out, fadeIn 0.3s ease-out;
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-sunken);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-primary);
+}
+
+/* 脉冲动画 */
+.status-pulse {
+  animation: pulse 1.6s ease-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(212, 168, 75, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(212, 168, 75, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(212, 168, 75, 0);
+  }
+}
+
+/* 悬浮提示 */
+.seat[data-state='RUNNING'] .seat-dot {
+  animation: ring 1.2s ease-out infinite;
+}
+
+@keyframes ring {
+  from {
+    box-shadow: 0 0 0 0 rgba(212, 168, 75, 0.7);
+  }
+  to {
+    box-shadow: 0 0 0 10px rgba(212, 168, 75, 0);
+  }
+}
+
+/* composer 动画 */
+.composer {
+  animation: slideUp 0.4s ease-out;
+}
+
+/* 智能体卡片进入动画 */
+.agent-card {
+  animation: scaleIn 0.3s ease-out;
+}
+
+.agent-card:nth-child(1) { animation-delay: 0.1s; }
+.agent-card:nth-child(2) { animation-delay: 0.2s; }
+.agent-card:nth-child(3) { animation-delay: 0.3s; }
+.agent-card:nth-child(4) { animation-delay: 0.4s; }
+.agent-card:nth-child(5) { animation-delay: 0.5s; }

@@ -1,0 +1,77 @@
+server:
+  port: 18080
+
+spring:
+  application:
+    name: multi-agent-discuss
+  profiles:
+    # 本地密钥写在 application-local.yml（已 gitignore），无需每次设环境变量
+    include: local
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 60MB
+  # MySQL 持久化：账号 / 常驻智能体 / LLM 网关预设。
+  # 启动前需先在 MySQL 里建库 + 建用户（见 README「MySQL 初始化」章节）；
+  # DB 不可达时 Spring 启动失败（fail-fast，避免运行中才发现连接不上）。
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/mad?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true}
+    username: ${DB_USER:root}
+    password: ${DB_PASSWORD:}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    # schema 由 Flyway 管；启动时只校验，不让 Hibernate 改表结构
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        jdbc.time_zone: Asia/Shanghai
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+  # 默认 ChatClient（Host / 兜底）。领域 Agent 注册时可用各自 API。
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY:sk-placeholder}
+      base-url: ${OPENAI_BASE_URL:https://api.openai.com}
+      chat:
+        options:
+          model: ${HOST_MODEL:gpt-4o-mini}
+          temperature: 0.4
+
+# jasypt 配置加密：application-local.yml 里的 ENC(...) 占位符由启动时
+# JASYPT_ENCRYPTOR_PASSWORD 环境变量解密。未设环境变量且存在 ENC(...) 会启动失败（fail-closed）。
+jasypt:
+  encryptor:
+    algorithm: PBEWithHmacSHA256AndAES_256
+    iv-generator-classname: org.jasypt.iv.RandomIvGenerator
+    key-obtention-iterations: 1000
+    property:
+      prefix: ENC(
+      suffix: )
+app:
+  vision:
+    api-key: ${VISION_API_KEY:${OPENAI_API_KEY:sk-placeholder}}
+    base-url: ${VISION_BASE_URL:${OPENAI_BASE_URL:https://api.openai.com}}
+    model: ${VISION_MODEL:gpt-4o}
+    enabled: true
+    fallback-when-unavailable: true
+  discuss:
+    default-max-rounds: 2
+    default-auto-discuss: true
+    think-timeout-seconds: 180
+  session:
+    history-limit: 20
+    vision-page-concurrency: 3
+    temp-dir: ${java.io.tmpdir}/multi-agent-discuss
+  host:
+    system-prompt: |
+      你是多智能体讨论的主持人（Host）。职责：汇总各领域智能体观点、组织多轮讨论、
+      提炼专业共识、给出最终答案与解释。不绑定任何领域私有文献。保持中立、清晰、可追溯。
+logging:
+  level:
+    com.multiagent.discuss: INFO
+    org.springframework.ai: WARN

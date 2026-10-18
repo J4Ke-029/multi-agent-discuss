@@ -1,0 +1,26 @@
+target/
+archive/
+frontend/node_modules/
+frontend/dist/
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+.vscode/
+*.log
+*.out
+*.err
+*.bundle
+.DS_Store
+
+# 本地测试工具、数据库导出和凭据排查脚本不得提交
+/backups/
+/test-tools/
+/AGENTS.md
+/frontend/UI_CHANGES.md
+
+# 本地密钥（含第三方 API Key）
+src/main/resources/application-local.yml
+.env
+.env.*
