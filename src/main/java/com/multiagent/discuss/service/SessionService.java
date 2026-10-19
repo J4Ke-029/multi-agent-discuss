@@ -384,7 +384,7 @@ public class SessionService {
         agent.setVisionProgressCurrent(0);
         agent.setVisionProgressTotal(0);
 
-        Path workDir = workDir(sessionId).resolve(agentId);
+        Path workDir = safeChildPath(workDir(sessionId), agentId);
         try {
             List<PageImage> pages = ingestService.ingestToPages(data, fileName, workDir);
             agent.setKnowledgeStatus(KnowledgeStatus.VISION_PROCESSING);
@@ -598,7 +598,7 @@ public class SessionService {
         }
         knowledgeStore.clearAgent(sessionId, agentId);
         agentFactory.evictSession(sessionId);
-        deleteTree(workDir(sessionId).resolve(agentId));
+        deleteTree(safeChildPath(workDir(sessionId), agentId));
         log.info("移除智能体 session={} agent={} name={}", sessionId, agentId, removed.getName());
     }
 
@@ -705,7 +705,21 @@ public class SessionService {
     }
 
     public Path workDir(String sessionId) {
-        return Path.of(props.getSession().getTempDir(), sessionId);
+        Path root = Path.of(props.getSession().getTempDir()).toAbsolutePath().normalize();
+        return safeChildPath(root, sessionId);
+    }
+
+    static Path safeChildPath(Path root, String id) {
+        if (id == null || id.isBlank() || id.length() > 128
+                || !id.matches("[A-Za-z0-9_-]+")) {
+            throw new IllegalArgumentException("临时目录标识不合法");
+        }
+        Path normalizedRoot = root.toAbsolutePath().normalize();
+        Path child = normalizedRoot.resolve(id).normalize();
+        if (!child.getParent().equals(normalizedRoot)) {
+            throw new IllegalArgumentException("临时目录不能越过配置根目录");
+        }
+        return child;
     }
 
     private void ensureWorkDir(String sessionId) {

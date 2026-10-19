@@ -1,5 +1,6 @@
 package com.multiagent.discuss.ingest;
 
+import com.multiagent.discuss.config.AppProperties;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.ImageType;
@@ -7,6 +8,7 @@ import org.apache.pdfbox.rendering.PDFRenderer;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
 import org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart;
+import org.docx4j.wml.Text;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -16,6 +18,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +40,12 @@ import java.util.Locale;
 @Component
 public class DocumentIngestService {
 
+    private final Path allowedRoot;
+
+    public DocumentIngestService(AppProperties props) {
+        this.allowedRoot = Path.of(props.getSession().getTempDir()).toAbsolutePath().normalize();
+    }
+
     /** 一页有意义的文本长度阈值。低于此值认为是扫描版或图像型 PDF，需要 Vision。 */
     public static final int TEXT_LAYER_THRESHOLD = 80;
 
@@ -49,7 +58,7 @@ public class DocumentIngestService {
     }
 
     public List<PageImage> ingestToPages(byte[] data, String fileName, Path sessionWorkDir) throws IOException {
-        Files.createDirectories(sessionWorkDir);
+        sessionWorkDir = prepareWorkDirectory(sessionWorkDir);
         String lower = fileName == null ? "" : fileName.toLowerCase(Locale.ROOT);
 
         if (lower.endsWith(".pdf")) {
@@ -68,6 +77,33 @@ public class DocumentIngestService {
         }
         // 默认按文本
         return textAsPages(new String(data, StandardCharsets.UTF_8), sessionWorkDir);
+    }
+
+    private Path prepareWorkDirectory(Path requested) throws IOException {
+        if (requested == null) throw new IllegalArgumentException("文档工作目录不能为空");
+        Path normalized = requested.toAbsolutePath().normalize();
+        if (normalized.equals(allowedRoot) || !normalized.startsWith(allowedRoot)) {
+            throw new IllegalArgumentException("文档工作目录越过配置根目录");
+        }
+        Files.createDirectories(allowedRoot);
+        Path realRoot = allowedRoot.toRealPath();
+        Path current = realRoot;
+        for (Path segment : allowedRoot.relativize(normalized)) {
+            Path next = current.resolve(segment.toString());
+            if (Files.exists(next, LinkOption.NOFOLLOW_LINKS)) {
+                if (!Files.isDirectory(next, LinkOption.NOFOLLOW_LINKS)) {
+                    throw new IllegalArgumentException("文档工作目录包含链接或非目录节点");
+                }
+            } else {
+                Files.createDirectory(next);
+            }
+            Path realNext = next.toRealPath();
+            if (!realNext.startsWith(realRoot)) {
+                throw new IllegalArgumentException("文档工作目录包含越界目录联接");
+            }
+            current = realNext;
+        }
+        return current;
     }
 
     public String extractPlainText(byte[] data, String fileName) throws IOException {
@@ -140,7 +176,9 @@ public class DocumentIngestService {
             if (nodes != null) {
                 for (Object tn : nodes) {
                     Object unwrapped = (tn instanceof JAXBElement) ? ((JAXBElement<?>) tn).getValue() : tn;
-                    if (unwrapped != null) {
+                    if (unwrapped instanceof Text textNode) {
+                        sb.append(textNode.getValue());
+                    } else if (unwrapped != null) {
                         sb.append(unwrapped.toString());
                     }
                     sb.append(' ');
