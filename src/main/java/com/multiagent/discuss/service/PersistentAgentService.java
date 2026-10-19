@@ -26,7 +26,7 @@ import java.util.UUID;
 /**
  * 常驻智能体 CRUD。所有操作都强制 {@code owner_user_id = currentUser.id}。
  *
- * <p><b>网关（apiKey / baseUrl / model）加密入库</b>：它自 0.9.0 起存 jasypt {@code ENC(...)} 密文，
+ * <p><b>网关（apiKey / baseUrl / model）加密入库</b>：它自 2.4.0 起存 jasypt {@code ENC(...)} 密文，
  * 与导师、LLM 预设同款。密文就落在 {@code persistent_agent} 行上，而该表按 {@code owner_user_id}
  * 隔离，所以凭据**跟随账号**：列表只回本人行、{@code reveal} 走 {@code requireOwned}、
  * 跨账号一律 401，库里没有跨账号共享的 Key。
@@ -264,7 +264,7 @@ public class PersistentAgentService {
         knowledgeStore.putPages(sessionId, seat.getId(), pages);
         seat.setKnowledgeStatus(KnowledgeStatus.KNOWLEDGE_READY);
         seat.setDocumentFileName(c.docCount() + " 个文件");
-        // ⚠️ 把网关提示**接在后面**而不是盖掉：0.9.0 的卖点就是「常驻自带网关、不用再配」，
+        // ⚠️ 把网关提示**接在后面**而不是盖掉：2.4.0 的卖点就是「常驻自带网关、不用再配」，
         // 整句替换会让用户以为这次加入没继承网关。
         seat.setStatusMessage("知识就绪：" + c.docCount() + " 个文件，" + c.pageCount() + " 页 · "
                 + seat.getStatusMessage());

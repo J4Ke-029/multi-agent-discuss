@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * 归档快照的**凭据红线**：payload 里永远不许出现任何 API Key。
  *
- * <p>这条约束在 0.9.0 之后变得更紧要 —— 常驻智能体自己也开始存 Key 了，席位上的
+ * <p>这条约束在 2.4.0 之后变得更紧要 —— 常驻智能体自己也开始存 Key 了，席位上的
  * {@code DomainAgentConfig.apiKey} 不再只可能是「会话网关的副本」。而「结束会话」正是把
  * 席位整体快照落库的时机，一旦有人图省事改成直接序列化 {@code Session}（或者往白名单里
  * 顺手加一个 {@code apiKey}），这条红线就会无声地破掉：不报错、测试不红、只是库里多了一串明文。

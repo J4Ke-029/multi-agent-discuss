@@ -3305,14 +3305,14 @@ a {
   color: var(--accent-success);
 }
 
-/* 0.10.0：进度条改成两轮之后，一格里有「知识 / 心得」两个片段，各带各的重试按钮 */
+/* 2.5.0：进度条改成两轮之后，一格里有「知识 / 心得」两个片段，各带各的重试按钮 */
 .memory-sync-cell-part {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
 }
 
-/* 0.10.0：常驻卡片 meta 行上的知识规模（N 个文件 · M 页），比网关信息弱一档 */
+/* 2.5.0：常驻卡片 meta 行上的知识规模（N 个文件 · M 页），比网关信息弱一档 */
 .agent-meta-doc {
   opacity: 0.85;
 }

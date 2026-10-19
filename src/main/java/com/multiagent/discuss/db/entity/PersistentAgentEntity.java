@@ -15,7 +15,7 @@ import java.time.Instant;
  *
  * <p><b>网关</b>：{@code baseUrl / model / apiKeyEnc} 三件套在「保存为常驻」时从源席位整体拷来，
  * {@code apiKeyEnc} 是 jasypt {@code ENC(...)} 密文。这三列是 V1 建表时就有的；V2 曾把
- * {@code apiKeyEnc} 清空并加注释「新数据一律不存 Key」，**那条决策已被 0.9.0 推翻** ——
+ * {@code apiKeyEnc} 清空并加注释「新数据一律不存 Key」，**那条决策已被 2.4.0 推翻** ——
  * 现在只有这张表自己、{@code SessionService} 与 {@code KeyVault} 能读它，对外一律掩码。
  *
  * <p>三件套是**原子**的：没有 Key 就不该有 baseUrl/model，否则会出现「看着像自带网关、

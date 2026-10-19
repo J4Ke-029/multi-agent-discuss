@@ -58,7 +58,7 @@ import java.util.stream.Collectors;
  * {@link AgentKnowledgeStore#buildRetrievedContext}）。
  *
  * <p>⚠️ 导师**保存 API Key**（jasypt 加密），这样它能以自己配置的网关直接跑讨论。
- * 自 0.9.0 起常驻智能体也保存网关，两者在这点上已经一致（同一套加密 + 掩码 + reveal 口径）；
+ * 自 2.4.0 起常驻智能体也保存网关，两者在这点上已经一致（同一套加密 + 掩码 + reveal 口径）；
  * 差别只剩「导师没有『用本场网关』的覆盖项」。
  * 列表接口只回脱敏值，明文走 {@link #reveal}。
  */
