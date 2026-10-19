@@ -2,7 +2,11 @@ package com.multiagent.discuss.service;
 
 import org.junit.jupiter.api.Test;
 
+import java.nio.file.Path;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -48,5 +52,13 @@ class SessionServiceTest {
         assertFalse(SessionService.useOwnGateway("", null));
         assertFalse(SessionService.useOwnGateway("   ", null));
         assertFalse(SessionService.useOwnGateway("\t\n ", false));
+    }
+
+    @Test
+    void workDirectoryChildrenCannotEscapeTheirConfiguredRoot() {
+        Path root = Path.of("build", "sessions").toAbsolutePath().normalize();
+        assertEquals(root.resolve("agent-123"), SessionService.safeChildPath(root, "agent-123"));
+        assertThrows(IllegalArgumentException.class, () -> SessionService.safeChildPath(root, "../outside"));
+        assertThrows(IllegalArgumentException.class, () -> SessionService.safeChildPath(root, "nested/path"));
     }
 }

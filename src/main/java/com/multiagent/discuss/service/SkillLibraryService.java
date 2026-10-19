@@ -127,10 +127,26 @@ public class SkillLibraryService {
         };
     }
 
-    private static String replaceFrontmatterName(String markdown, String name) {
+    static String replaceFrontmatterName(String markdown, String name) {
         String yamlScalar = "\"" + name.replace("\\", "\\\\").replace("\"", "\\\"") + "\"";
-        return markdown.replaceFirst("(?m)^name\\s*:\\s*.*$",
-                java.util.regex.Matcher.quoteReplacement("name: " + yamlScalar));
+        int start = 0;
+        int lineNumber = 0;
+        while (start <= markdown.length()) {
+            int newline = markdown.indexOf('\n', start);
+            int lineEnd = newline < 0 ? markdown.length() : newline;
+            int contentEnd = lineEnd > start && markdown.charAt(lineEnd - 1) == '\r' ? lineEnd - 1 : lineEnd;
+            String line = markdown.substring(start, contentEnd);
+            if (lineNumber == 0 && !"---".equals(line.strip())) return markdown;
+            if (lineNumber > 0 && "---".equals(line.strip())) break;
+            int colon = line.indexOf(':');
+            if (lineNumber > 0 && colon >= 0 && "name".equals(line.substring(0, colon).strip())) {
+                return markdown.substring(0, start) + "name: " + yamlScalar + markdown.substring(contentEnd);
+            }
+            if (newline < 0) break;
+            start = newline + 1;
+            lineNumber++;
+        }
+        return markdown;
     }
 
     private static void validatePackagePathsAndSize(Map<String, byte[]> files) {

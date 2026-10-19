@@ -18,10 +18,13 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Map;
 import java.util.Optional;
+import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTimeout;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -187,6 +190,18 @@ class SkillLibraryServiceTest {
                   description: hidden
                 ---
                 """));
+    }
+
+    @Test
+    void replacesFrontmatterNameInLinearTime() {
+        String markdown = "---\nname:" + " ".repeat(200_000) + "old\ndescription: test\n---\nbody";
+        String replaced = assertTimeout(Duration.ofSeconds(1),
+                () -> SkillLibraryService.replaceFrontmatterName(markdown, "new-name"));
+        assertTrue(replaced.startsWith("---\nname: \"new-name\"\n"));
+
+        String nearMiss = "---\nname" + " ".repeat(200_000) + "x: old\ndescription: test\n---\nbody";
+        assertEquals(nearMiss, assertTimeout(Duration.ofSeconds(1),
+                () -> SkillLibraryService.replaceFrontmatterName(nearMiss, "new-name")));
     }
 
     @Test
