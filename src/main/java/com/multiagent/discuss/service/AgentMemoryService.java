@@ -322,7 +322,7 @@ public class AgentMemoryService {
      * <p>刻意<b>不落库</b>：关掉弹窗这段对话就没了。持久产物是用户点过确认的那条钉子。
      *
      * @param sessionIdOrNull 可选。仅当这个账号级对象**自己没有网关**时才会用到 ——
-     *                        那时借这场会话的网关。导师与 0.9.0 起保存过的常驻智能体都自带，
+     *                        那时借这场会话的网关。导师与 2.4.0 起保存过的常驻智能体都自带，
      *                        所以通常可以不传。调用方必须已对该会话做过 {@code requireAccess}。
      */
     public Map<String, Object> correct(Long userId, MemoryTargetType type, String uuid,
@@ -679,7 +679,7 @@ public class AgentMemoryService {
      * 纠错对话用的客户端。解析顺序：
      * <b>账号级对象自己的 Key（导师 或 常驻智能体）→ 指定会话的网关 → 服务端默认</b>。
      *
-     * <p>与 {@code MentorService.analysisClient} 同构。到 0.9.0 为止两种账号级对象都能自带网关
+     * <p>与 {@code MentorService.analysisClient} 同构。到 2.4.0 为止两种账号级对象都能自带网关
      * （常驻智能体的网关是「保存为常驻」那一刻从席位快照下来的，jasypt 加密入库），
      * 所以这里两个分支并列；都没有才借会话网关或服务端默认。
      *

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
  * {@code persistent_agent.api_key_enc}。
  *
  * <p>关于常驻智能体：那列是 V1 建表时就有的，V2 曾清空并声明「新数据一律不存 Key」；
- * **该决策自 0.9.0 起被推翻** —— 现在保存为常驻时会把席位当时在用的网关加密写进去。
+ * **该决策自 2.4.0 起被推翻** —— 现在保存为常驻时会把席位当时在用的网关加密写进去。
  * 所以这三个使用者的口径已经完全一致：加密入库、列表掩码、明文只走各自的 reveal 接口（仅 owner）。
  *
  * <p>与 {@code application.yml} 里 {@code jasypt.encryptor.*} 共用同一份配置（算法 / 迭代次数 / IV 生成器）。

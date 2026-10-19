@@ -36,7 +36,7 @@ import java.util.Map;
 /**
  * 常驻智能体的**文件知识库**：把它读过的资料跨会话攒在账号下。
  *
- * <p><b>为什么需要它。</b> 0.9.0 之后常驻智能体的名字 / 人设 / 网关都跟着账号走了，
+ * <p><b>为什么需要它。</b> 2.4.0 之后常驻智能体的名字 / 人设 / 网关都跟着账号走了，
  * 唯独知识还只活在 {@link com.multiagent.discuss.knowledge.AgentKnowledgeStore} 里 ——
  * 那是个按 {@code sessionId::agentId} 键的内存 map，会话一销毁就全没了。结果就是
  * 「每次都重传文件」，它昨天读过的资料今天完全不记得。

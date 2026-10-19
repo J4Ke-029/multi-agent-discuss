@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 席位上的**待保存清单** —— 0.10.0 加的「本场读了哪些文件、还没入库」那一层。
+ * 席位上的**待保存清单** —— 2.5.0 加的「本场读了哪些文件、还没入库」那一层。
  *
  * <p>它同时干两件事：说明「结束会话该把哪些文件存进常驻知识库」，以及当**幂等闸**。
  * 两件事错了都很难被发现：前者错了会漏存或错存，后者错了会重复入库 ——

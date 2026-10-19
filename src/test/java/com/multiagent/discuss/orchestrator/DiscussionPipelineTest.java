@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 /**
- * 知识注入走哪条分支 —— 0.10.0 把判据从 `isMentor()` 放宽到「导师 **或** 带 uuid 的常驻席位」。
+ * 知识注入走哪条分支 —— 2.5.0 把判据从 `isMentor()` 放宽到「导师 **或** 带 uuid 的常驻席位」。
  *
  * <p>这条判定是本次改动里**唯一 prompt 可见**的行为变更，也是「不能造假或者虚构」那条要求的
  * 真正落点：

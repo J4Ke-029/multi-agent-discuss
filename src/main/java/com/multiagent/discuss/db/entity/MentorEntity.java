@@ -15,7 +15,7 @@ import java.time.Instant;
  * <p>导师**保存 API Key**（{@code apiKeyEnc}，jasypt {@code ENC(...)} 密文），这样跨会话、跨设备
  * 能直接以自己配置的网关跑讨论，不必每次重选预设。列表接口只回脱敏值，明文走 reveal 接口（仅 owner）。
  *
- * <p>⚠️ 这条曾是导师与 {@link PersistentAgentEntity} 的「关键差别」，但自 0.9.0 起常驻智能体
+ * <p>⚠️ 这条曾是导师与 {@link PersistentAgentEntity} 的「关键差别」，但自 2.4.0 起常驻智能体
  * 也保存网关（同一套 {@code KeyVault} 加密 + 掩码 + reveal 口径），两者在这点上已经一致。
  *
  * <p>{@code mentorUuid} 是跨会话引用用的稳定标识（对齐 {@code persistent_agent.agent_uuid}）：

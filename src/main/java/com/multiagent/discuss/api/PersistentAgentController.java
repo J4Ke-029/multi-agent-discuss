@@ -86,7 +86,7 @@ public class PersistentAgentController {
     //
     // ⚠️ 下面四个端点的路径参数一律是 **agentUuid**（那个 CHAR(36) 的稳定标识），
     // 与本类上面那些 `/{id}` 用的 **DB 主键**是两种东西。混用是这个项目已经踩过一次的坑
-    // （0.9.0 的 CHANGELOG 记着 agentId 与 agentUuid 比错那次），所以宁可路径写长一点。
+    // （2.4.0 的 CHANGELOG 记着 agentId 与 agentUuid 比错那次），所以宁可路径写长一点。
     //
     // 知识的**唯一入口是「结束会话时自动带上」**（POST /api/sessions/{sid}/agents/{aid}/knowledge/save），
     // 这里刻意**不做上传端点** —— 攒下来的就是它在讨论里真读过的那些资料。

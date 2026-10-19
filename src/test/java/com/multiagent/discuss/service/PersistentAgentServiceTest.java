@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * 常驻智能体对外视图的**掩码不变量**。
  *
- * <p>0.9.0 起常驻智能体自带网关、Key 加密入库，于是多出一条硬约束：**明文绝不出现在任何
+ * <p>2.4.0 起常驻智能体自带网关、Key 加密入库，于是多出一条硬约束：**明文绝不出现在任何
  * 面向列表的返回值里**（{@code create} / {@code update} / {@code list} 都回掩码，
  * 明文只走 {@code reveal}）。前端会把返回值直接塞进列表 state 与界面，这里漏一次就是永久泄漏。
  *
@@ -53,7 +53,7 @@ class PersistentAgentServiceTest {
     /**
      * 只用到 keyVault，另外五个依赖本测试一个都不碰 —— 与 AgentMemoryPromptTest 传 null 同一手法。
      *
-     * <p>末尾两个是 0.10.0 加的（知识库 + 会话知识灌回），{@code view} 一个字节都碰不到它们。
+     * <p>末尾两个是 2.5.0 加的（知识库 + 会话知识灌回），{@code view} 一个字节都碰不到它们。
      */
     private static PersistentAgentService service(KeyVault vault) {
         return new PersistentAgentService(null, null, null, vault, null, null);

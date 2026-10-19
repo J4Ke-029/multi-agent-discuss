@@ -13,7 +13,7 @@
 
     <groupId>com.multiagent</groupId>
     <artifactId>multi-agent-discuss</artifactId>
-    <version>0.10.0</version>
+    <version>3.0.0</version>
     <name>multi-agent-discuss</name>
     <description>REST multi-agent discussion service with Vision and optional doc revision</description>
 
