@@ -64,8 +64,9 @@ public class DocumentIngestService {
         if (lower.endsWith(".pdf")) {
             return renderPdf(data, sessionWorkDir);
         }
-        if (lower.endsWith(".png") || lower.endsWith(".jpg") || lower.endsWith(".jpeg") || lower.endsWith(".webp")) {
-            Path img = sessionWorkDir.resolve("page-0" + extension(lower));
+        String imageSuffix = trustedImageSuffix(lower);
+        if (imageSuffix != null) {
+            Path img = sessionWorkDir.resolve("page-0" + imageSuffix);
             Files.write(img, data);
             return List.of(new PageImage(0, img, null, false));
         }
@@ -207,9 +208,12 @@ public class DocumentIngestService {
         return pages;
     }
 
-    private static String extension(String lower) {
-        int i = lower.lastIndexOf('.');
-        return i >= 0 ? lower.substring(i) : ".bin";
+    private static String trustedImageSuffix(String lower) {
+        if (lower.endsWith(".png")) return ".png";
+        if (lower.endsWith(".jpg")) return ".jpg";
+        if (lower.endsWith(".jpeg")) return ".jpeg";
+        if (lower.endsWith(".webp")) return ".webp";
+        return null;
     }
 
     private static String blankToNull(String s) {
