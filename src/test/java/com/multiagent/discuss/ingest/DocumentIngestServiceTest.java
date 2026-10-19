@@ -72,4 +72,19 @@ class DocumentIngestServiceTest {
         assertTrue(pages.get(0).plainHint().contains("DOCX regression text"));
         assertTrue(pages.get(0).hasTextLayer());
     }
+
+    @Test
+    void imageFileNameCannotControlTheOutputPath() throws Exception {
+        AppProperties props = new AppProperties();
+        Path allowed = tempDir.resolve("allowed");
+        props.getSession().setTempDir(allowed.toString());
+        DocumentIngestService service = new DocumentIngestService(props);
+
+        var pages = service.ingestToPages(new byte[]{1, 2, 3}, "../../outside.png",
+                allowed.resolve("session").resolve("agent"));
+
+        assertEquals(allowed.resolve("session/agent/page-0.png").toRealPath(),
+                pages.get(0).imagePath().toRealPath());
+        assertTrue(Files.notExists(tempDir.resolve("outside.png")));
+    }
 }
